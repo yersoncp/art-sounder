@@ -9,10 +9,7 @@ const RadialSound = () => {
   const Sketch = (p: any) => {
     let song: any, amplitude: any, fft: any
     const MAX_CIRCLE = 180
-    const INNER_CIRCLE = 80
-    const BORDER_CIRCLE = 2
-    const ANGLE_DIVIDE = 2
-    const CANVAN_WIDTH = 2000
+    const CANVAN_WIDTH = 800
     const CANVAN_HEIGHT = 800
 
     p.preload = () => {
@@ -33,7 +30,7 @@ const RadialSound = () => {
       p.clear()
       p.background(0, 0)
       p.noStroke()
-      p.translate(CANVAN_WIDTH / 2, CANVAN_HEIGHT / 2)
+      p.translate(0, CANVAN_HEIGHT / 2)
       p.colorMode("RGB")
       p.angleMode("DEGREES")
 
@@ -41,24 +38,20 @@ const RadialSound = () => {
       let spectrum = fft.analyze()
 
       // Colors
-      let from = p.color(63, 200, 255)
-      let to = p.color(255, 25, 25)
+      let from = p.color(34, 104, 255, 200)
+      let to = p.color(255, 25, 25, 200)
 
-      let angle = 360 / (spectrum.length / ANGLE_DIVIDE)
-      for (let i = 0; i < spectrum.length; i++) {
-        p.rotate(angle)
-        let color = p.lerpColor(from, to, p.map(i, 0, spectrum.length, 0, 1))
-        let height = p.map(spectrum[i], 0, 255, INNER_CIRCLE + BORDER_CIRCLE, MAX_CIRCLE)
+      const mid = Math.floor(spectrum.length / 2)
+      const firstHalf = spectrum.slice(0, mid)
+
+      for (let i = 0; i < firstHalf.length; i++) {
+        let color = p.lerpColor(from, to, p.map(i, 0, firstHalf.length, 0, 1))
+        let height = p.map(firstHalf[i], 0, 255, 0, MAX_CIRCLE)
         p.stroke(color)
-        p.line(INNER_CIRCLE, INNER_CIRCLE, height, height)
+        p.line(i, 0, i, -height)
+        p.line(i, 0, i, height)
       }
 
-      /**  Get the average (root mean square) amplitude */
-      let rms = amplitude.getLevel()
-      p.fill(255)
-      p.noStroke()
-      // Draw an ellipse with size based on volume
-      p.ellipse(0, 0, 20 + rms * 200, 20 + rms * 200)
     }
 
     p.togglePlay = () => {

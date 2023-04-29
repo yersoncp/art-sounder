@@ -107,7 +107,7 @@ const RecordVideo: FC<IRecordVideoProps> = ({ children }) => {
         ref={elementToRecordRef}
         style={{
           border: "5px solid gray", borderRadius: "5px", padding: "20px", margin: "20px",
-          width: "480px", height: "360px",
+          width: "480px", height: "480px",
           background: "#222",
         }}
       >
